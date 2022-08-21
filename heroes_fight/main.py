@@ -15,3 +15,4 @@ while not simulation.has_a_winner:
     simulation.start_round()
 
 print(f'\n¡El vencedor de la batalla es el equipo {simulation.winner}!')
+simulation.check_if_send_results()

@@ -1,4 +1,9 @@
+import os
 import random
+import smtplib
+import ssl
+from email.message import EmailMessage
+from dotenv import load_dotenv
 
 class Simulation:
     def __init__(self, team_one, team_two):
@@ -127,4 +132,25 @@ class Simulation:
 
         ## En caso de que no haya un ganador se reincia el HP de los personajes
         self.setup_next_round()
+    
+    def check_if_send_results(self):
+        should_send = int(input('¿Deseas enviar los resultados por email? (0: No, 1: Sí)\n'))
+        if should_send > 0:
+            receiver = input('Ingresa la dirección a la que deseas enviar los resultados: ')
+            self.send_email(receiver)
 
+    def send_email(self, receiver):
+        load_dotenv()
+        sender = os.environ.get('MAIL_SENDER')
+        password = os.environ.get('MAIL_PASSWORD')
+        subject = 'Prueba de correo'
+        body = 'Un cuerpo random'
+        em_instance = EmailMessage()
+        em_instance['From'] = sender
+        em_instance['To'] = receiver
+        em_instance['Subject'] = subject
+        em_instance.set_content(body)
+        context = ssl.create_default_context()
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+            smtp.login(sender, password)
+            smtp.sendmail(sender, receiver, em_instance.as_string())
