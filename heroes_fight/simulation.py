@@ -14,6 +14,8 @@ class Simulation:
         self.team_two = team_two
         self.removed_team_one = []
         self.removed_team_two = []
+        self.mail_body = ''
+        self.winner_text = ''
    
     def show_teams(self):
         print('Miembros del equipo 1')
@@ -45,7 +47,9 @@ class Simulation:
     def init_fight(self):
         team_one_fighter = random.choice(self.team_one.members)
         team_two_fighter = random.choice(self.team_two.members)
-        print(f'Enfrentamiento: {team_one_fighter.name} (Equipo 1) vs {team_two_fighter.name} (Equipo 2)')
+        encounter_text = f'Enfrentamiento: {team_one_fighter.name} (Equipo 1) vs {team_two_fighter.name} (Equipo 2)'
+        self.mail_body += encounter_text + '\n'
+        print(encounter_text)
         if team_one_fighter.base_stats['speed'] > team_two_fighter.base_stats['speed']:
             ## Ataca primero el luchador 1
             self.attack_simulation(team_one_fighter, team_two_fighter)
@@ -70,6 +74,8 @@ class Simulation:
             second.partial_hp -= first_attack_power
             if second.partial_hp <= 0:
                 second.partial_hp = 0
+                result_text = f'{second.name} ha muerto :(. El ganador es {first.name}'
+                self.mail_body += result_text + '\n'
                 print(f'{second.name} ha muerto :(. El ganador es {first.name}')
                 self.remove_hero_from_list(second)
                 battle_finished = True
@@ -82,7 +88,9 @@ class Simulation:
                 first.partial_hp -= second_attack_power
                 if first.partial_hp <= 0:
                     first.partial_hp = 0
-                    print(f'{first.name} ha muerto :(. El ganador es {second.name}')
+                    result_text = f'{first.name} ha muerto :(. El ganador es {second.name}'
+                    self.mail_body += result_text + '\n'
+                    print(result_text)
                     self.remove_hero_from_list(first)
                     battle_finished = True
                 else:
@@ -112,26 +120,30 @@ class Simulation:
         self.round += 1
         separator = 10 * '-'
         print(f'\n{separator} RONDA #{self.round} {separator}\n')
+        self.mail_body += f'\nRONDA {self.round}:\n'
         while len(self.team_one.members) > 0 and len(self.team_two.members) > 0:
             self.get_alive_members()
             self.init_fight()
             print('\n')
 
         if len(self.team_one.members) > 0:
-            print('¡Ha ganado el equipo 1!')
+            round_winner_text = '¡Ha ganado el equipo 1!'
+            print(round_winner_text)
             self.team_one.victories_count += 1
             if self.team_one.victories_count == 2:
                 self.winner = 1
                 self.has_a_winner = True
         else:
-            print('¡Ha ganado el equipo 2!')
+            round_winner_text = '¡Ha ganado el equipo 2!'
+            print(round_winner_text)
             self.team_two.victories_count += 1
             if self.team_two.victories_count == 2:
                 self.winner = 2
                 self.has_a_winner = True
-
-        ## En caso de que no haya un ganador se reincia el HP de los personajes
-        self.setup_next_round()
+        self.mail_body += round_winner_text
+        if not self.has_a_winner:
+            ## En caso de que no haya un ganador se reincia el HP de los personajes
+            self.setup_next_round()
     
     def check_if_send_results(self):
         should_send = int(input('¿Deseas enviar los resultados por email? (0: No, 1: Sí)\n'))
@@ -143,14 +155,15 @@ class Simulation:
         load_dotenv()
         sender = os.environ.get('MAIL_SENDER')
         password = os.environ.get('MAIL_PASSWORD')
-        subject = 'Prueba de correo'
-        body = 'Un cuerpo random'
+        subject = 'Resultados Pelea de Personajes'
         em_instance = EmailMessage()
         em_instance['From'] = sender
         em_instance['To'] = receiver
         em_instance['Subject'] = subject
-        em_instance.set_content(body)
+        em_instance.set_content(self.mail_body)
+        em_instance.add_attachment(self.winner_text, subtype='html')
         context = ssl.create_default_context()
         with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
             smtp.login(sender, password)
             smtp.sendmail(sender, receiver, em_instance.as_string())
+            print('Correo enviado exitosamente')

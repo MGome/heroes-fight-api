@@ -14,5 +14,7 @@ simulation.show_teams()
 while not simulation.has_a_winner:
     simulation.start_round()
 
-print(f'\n¡El vencedor de la batalla es el equipo {simulation.winner}!')
+final_winner_text = f'\n¡El vencedor de la batalla es el equipo {simulation.winner}!'
+print(final_winner_text)
+simulation.winner_text += '<b>' + final_winner_text + '</b>'
 simulation.check_if_send_results()
