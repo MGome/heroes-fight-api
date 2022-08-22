@@ -48,7 +48,7 @@ class Simulation:
         team_one_fighter = random.choice(self.team_one.members)
         team_two_fighter = random.choice(self.team_two.members)
         encounter_text = f'Enfrentamiento: {team_one_fighter.name} (Equipo 1) vs {team_two_fighter.name} (Equipo 2)'
-        self.mail_body += '<p>' + encounter_text + '</p>'
+        self.mail_body += encounter_text + '<br>'
         print(encounter_text)
         if team_one_fighter.base_stats['speed'] > team_two_fighter.base_stats['speed']:
             ## Ataca primero el luchador 1
@@ -75,7 +75,7 @@ class Simulation:
             if second.partial_hp <= 0:
                 second.partial_hp = 0
                 result_text = f'{second.name} ha muerto :(. El ganador es {first.name}'
-                self.mail_body += '<p>' + result_text + '</p>'
+                self.mail_body += result_text + '<br>'
                 print(f'{second.name} ha muerto :(. El ganador es {first.name}')
                 self.remove_hero_from_list(second)
                 battle_finished = True
@@ -89,7 +89,7 @@ class Simulation:
                 if first.partial_hp <= 0:
                     first.partial_hp = 0
                     result_text = f'{first.name} ha muerto :(. El ganador es {second.name}'
-                    self.mail_body += '<p>' + result_text + '</p>'
+                    self.mail_body += result_text + '<br>'
                     print(result_text)
                     self.remove_hero_from_list(first)
                     battle_finished = True
@@ -140,7 +140,7 @@ class Simulation:
             if self.team_two.victories_count == 2:
                 self.winner = 2
                 self.has_a_winner = True
-        self.mail_body += '<p>' + round_winner_text + '</p>'
+        self.mail_body += round_winner_text + '<br>'
         if not self.has_a_winner:
             ## En caso de que no haya un ganador se reincia el HP de los personajes
             self.setup_next_round()
