@@ -15,6 +15,11 @@ class Hero:
         self.selected_attack = {}
 
     def select_attack(self):
+        '''
+        Se selecciona aleatoriamente un ataque de un determinado héroe.
+        Se guarda como un diccionario el nombre del ataque y su potencia,
+        con fin de mostrar el nombre del ataque en el log de eventos.
+        '''
         attack_list = [self.mental, self.strong, self.fast]
         selected_attack = random.choice(attack_list)
         attack_name = ['mental', 'strong', 'fast'][attack_list.index(selected_attack)]

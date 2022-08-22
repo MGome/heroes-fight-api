@@ -18,6 +18,10 @@ class Simulation:
         self.winner_text = ''
    
     def show_teams(self):
+        '''
+        Se itera sobre las listas de ambos equipos y se muestran los
+        nombres en conjunto de la afiliación del equipo.
+        '''
         print('Miembros del equipo 1')
         for member in self.team_one.members:
             print(member.name)
@@ -29,12 +33,22 @@ class Simulation:
         print(f'Afiliación del equipo: {self.team_two.alignment}')
 
     def setup_teams(self):
+        '''
+        Método que setea las condiciones para iniciar la partida,
+        en primer lugar obtiene el alignment de cada equipo y
+        actualiza las estadísticas para los miembros de ambos
+        equipos.
+        '''
         self.team_one.set_alignment()
         self.team_two.set_alignment()
         self.team_one.update_hero_stats()
         self.team_two.update_hero_stats()
 
     def get_alive_members(self):
+        '''
+        Método que busca mostrar los miembros restantes vivos
+        de cada equipo.
+        '''
         print('Miembros vivos del equipo 1:')
         for member in self.team_one.members:
             print(f'{member.name} (HP: {member.partial_hp})')
@@ -45,6 +59,14 @@ class Simulation:
         print('\n')
   
     def init_fight(self):
+        '''
+        Método que inicia la pelea entre dos personajes de equipos
+        contrarios. Ambos son elegidos aleatoriamente, donde el que
+        ataca primero estará determinado por la estadística de
+        velocidad real.
+        Cuando un personaje muere es eliminado de la lista de su
+        equipo.
+        '''
         team_one_fighter = random.choice(self.team_one.members)
         team_two_fighter = random.choice(self.team_two.members)
         encounter_text = f'Enfrentamiento: {team_one_fighter.name} (Equipo 1) vs {team_two_fighter.name} (Equipo 2)'
@@ -64,7 +86,13 @@ class Simulation:
             self.attack_simulation(first_to_attack, fighters[0])
 
     def attack_simulation(self, first, second):
-        ## First: Primero en atacar, Second: Segundo en atacar
+        '''
+        Método que simula una pelea, recibe dos instancias de héroes
+        que siguen la siguiente regla:
+        First: Primero en atacar, Second: Segundo en atacar
+        Ambos se atacan hasta que uno de los dos tenga HP
+        menor o igual a 0.
+        '''
         battle_finished = False
         while not battle_finished:
             first.select_attack()
@@ -97,6 +125,11 @@ class Simulation:
                     print(f'{first.name} ha quedado con {first.partial_hp} de HP')
 
     def remove_hero_from_list(self, hero):
+        '''
+        Método que recibe una instancia de héroe,
+        busca eliminar de la lista de su equipo
+        a un personaje que perdió su pelea.
+        '''
         if hero in self.team_one.members:
             self.team_one.members.remove(hero)
             self.removed_team_one.append(hero)
@@ -105,6 +138,12 @@ class Simulation:
             self.removed_team_two.append(hero)
 
     def restart_hp(self):
+        '''
+        Método que itera sobre todas las listas de
+        equipos. Busca restaurar el HP de cada personaje
+        a su valor inicial para iniciar la siguiente
+        ronda.
+        '''
         for member in self.team_one.members:
             member.partial_hp = member.hp
 
@@ -112,11 +151,20 @@ class Simulation:
             member.partial_hp = member.hp
 
     def setup_next_round(self):
+        '''
+        Método que restaura los equipos iniciales incluyendo
+        aquellos personajes que perdieron su pelea. Busca
+        restaurar los equipos para iniciar la siguiente ronda.
+        '''
         self.team_one.members.extend(self.removed_team_one)
         self.team_two.members.extend(self.removed_team_two)
         self.restart_hp()
 
     def start_round(self):
+        '''
+        Método de control de flujo general. Inicia una ronda y
+        determina cuando un equipo ganó la ronda y/o partida.
+        '''
         self.round += 1
         separator = 10 * '-'
         print(f'\n{separator} RONDA #{self.round} {separator}\n')
@@ -146,12 +194,26 @@ class Simulation:
             self.setup_next_round()
     
     def check_if_send_results(self):
+        '''
+        Método que consulta al usuario si es que desea
+        enviar los resultados por mail.
+        '''
         should_send = int(input('¿Deseas enviar los resultados por email? (0: No, 1: Sí)\n'))
         if should_send > 0:
             receiver = input('Ingresa la dirección a la que deseas enviar los resultados: ')
             self.send_email(receiver)
 
     def send_email(self, receiver):
+        '''
+        Método que envía los resultados por mail. En primer
+        lugar obtiene los valores almacenados en el .env,
+        para luego dar formato al mail. El body que se envía
+        en el mail es en formato HTML, para así dar el formato
+        requerido.
+        La estructura general de instanciar un mail y el uso
+        básico de smtp fue obtenido de la siguiente fuente:
+        https://realpython.com/python-send-email/
+        '''
         load_dotenv()
         sender = os.environ.get('MAIL_SENDER')
         password = os.environ.get('MAIL_PASSWORD')
@@ -167,8 +229,11 @@ class Simulation:
             smtp.login(sender, password)
             smtp.sendmail(sender, receiver, em_instance.as_string())
             print('Correo enviado exitosamente')
-    
+
     def set_html_body(self):
+        '''
+        Método que genera el cuerpo del mail a enviar.
+        '''
         html_text = f"""\
             <html>
                 <head></head>
