@@ -14,7 +14,6 @@ pip install python-dotenv
 - Opción 2 (universal, no testeada): Ejecutar desde la terminal / cmd el siguiente comando:
 ```
 pip install certifi
-pip install Scrapy
 ```
 
 ## Consideraciones generales del flujo
@@ -25,6 +24,12 @@ El sistema de combates es de 5 vs 5, donde el formato de peleas es igual al que 
 - Los ataques son por turnos, donde el que ataca primero es el que tenga una estadística de velocidad mayor.
 - El personaje que gana el combate puede luchar inmediatamente en el siguiente turno con el mismo HP que terminó su combate.
 - Al finalizar una ronda todos los miembros de los equipos recuperan el estado de su HP inicial.
+
+## Supuestos
+- Si bien un personaje puede ser héroe o villano, la clase que engloba ambos recibe el nombre Héroe.
+- El HP y la potencia de los ataques son calculados una vez que ya se calcularon las estadísticas reales. En este caso cabe mencionar que cuando se realiza la simulación habiendo calculado el HP y la potencia de los ataques antes de calcular las estadísticas reales la simulación dura un poco más, ya que los ataques no son tan poderosos como en el caso descrito en el supuesto. Sin embargo, dado que se calculan las estadísticas reales, se consideró que hacía más sentido utilizar los nuevos valores para los cálculos (en otro caso jamás habrían sido utilizados en la simulación, sin contar la velocidad).
+- El FB se calcula con la función dada para cada uno de los personajes.
+
 
 ## Mailer
 Debido a que `mailgun` tiene una limitación de máximo 5 usuarios registrados, donde cada usuario registrado debe aceptar una invitación previamente para poder recibir mails, se decidió utilizar un método alternativo para enviar mails.
