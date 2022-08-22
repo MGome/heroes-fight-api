@@ -226,9 +226,12 @@ class Simulation:
         em_instance.set_content(body, subtype='html')
         context = ssl.create_default_context()
         with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-            smtp.login(sender, password)
-            smtp.sendmail(sender, receiver, em_instance.as_string())
-            print('Correo enviado exitosamente')
+            try:
+                smtp.login(sender, password)
+                smtp.sendmail(sender, receiver, em_instance.as_string())
+                print('Correo enviado exitosamente')
+            except Exception as ex:
+                print(f'Lo siento, no se ha podido enviar el mail. Error: {ex}')
 
     def set_html_body(self):
         '''
