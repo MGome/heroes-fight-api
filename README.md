@@ -9,7 +9,7 @@ pip install requests
 ```
 pip install python-dotenv 
 ```
-3) El envío de mails se realiza a través de `smtp` (el detalle de esto está en la sección [Mailer](#mailer)). Esto puede ocasionar un error de `SSLCertVerificationError` (de acuerdo a diversas fuentes es exclusivo de Mac), el cual puede ser solucionado con cualquiera de las siguientes opciones:
+3) El envío de mails se realiza a través de `smtp` (el detalle de esto está en la sección [Mailer](#mailer)). Esto puede ocasionar un error con algunas versiones de Python de `SSLCertVerificationError` (de acuerdo a diversas fuentes es exclusivo de Mac), el cual puede ser solucionado con cualquiera de las siguientes opciones:
 - Opción 1 (exclusiva Mac, testeada): Ir desde Finder a Aplicaciones, entrar a la carpeta Python X (donde X es la versión instalada) y abrir el archivo `Install Certificates.command`. Este se encargará de ejecutar el comando que instala el certificado.
 - Opción 2 (universal, no testeada): Ejecutar desde la terminal / cmd el siguiente comando:
 ```
