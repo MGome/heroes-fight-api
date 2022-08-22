@@ -20,15 +20,12 @@ class Team:
         for member in self.members:
             partial_fb = 1 + random.randint(0,9)
             member.fb = partial_fb if member.alignment == self.alignment else partial_fb**(-1)
-            # print(f'FB calculado: {member.fb}')
             member.hp = self.calculate_member_hp(member.base_stats)
             member.partial_hp = member.hp
-            # print(f'El HP calculado fue de {member.hp}')
             for stat in member.base_stats.keys():
                 actual_stamina = random.randint(0,9)
                 base = member.base_stats[stat]
                 calculated_stat = ((2*base + actual_stamina)/1.1)*member.fb
-                # print(f'La estadística cambió de: {member.base_stats[stat]} - a: {calculated_stat}')
                 member.base_stats[stat] = calculated_stat
             self.calculate_member_attacks(member)
             print('\n')

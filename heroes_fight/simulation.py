@@ -162,7 +162,6 @@ class Simulation:
         em_instance['Subject'] = subject
         body = self.set_html_body()
         em_instance.set_content(body, subtype='html')
-        # em_instance.add_attachment(self.winner_text, subtype='html')
         context = ssl.create_default_context()
         with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
             smtp.login(sender, password)
