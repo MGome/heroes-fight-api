@@ -48,7 +48,7 @@ class Simulation:
         team_one_fighter = random.choice(self.team_one.members)
         team_two_fighter = random.choice(self.team_two.members)
         encounter_text = f'Enfrentamiento: {team_one_fighter.name} (Equipo 1) vs {team_two_fighter.name} (Equipo 2)'
-        self.mail_body += encounter_text + '\n'
+        self.mail_body += '<p>' + encounter_text + '</p>'
         print(encounter_text)
         if team_one_fighter.base_stats['speed'] > team_two_fighter.base_stats['speed']:
             ## Ataca primero el luchador 1
@@ -75,7 +75,7 @@ class Simulation:
             if second.partial_hp <= 0:
                 second.partial_hp = 0
                 result_text = f'{second.name} ha muerto :(. El ganador es {first.name}'
-                self.mail_body += result_text + '\n'
+                self.mail_body += '<p>' + result_text + '</p>'
                 print(f'{second.name} ha muerto :(. El ganador es {first.name}')
                 self.remove_hero_from_list(second)
                 battle_finished = True
@@ -89,7 +89,7 @@ class Simulation:
                 if first.partial_hp <= 0:
                     first.partial_hp = 0
                     result_text = f'{first.name} ha muerto :(. El ganador es {second.name}'
-                    self.mail_body += result_text + '\n'
+                    self.mail_body += '<p>' + result_text + '</p>'
                     print(result_text)
                     self.remove_hero_from_list(first)
                     battle_finished = True
@@ -120,7 +120,7 @@ class Simulation:
         self.round += 1
         separator = 10 * '-'
         print(f'\n{separator} RONDA #{self.round} {separator}\n')
-        self.mail_body += f'\nRONDA {self.round}:\n'
+        self.mail_body += '<p><b>' + f'RONDA {self.round}:' + '</b></p>'
         while len(self.team_one.members) > 0 and len(self.team_two.members) > 0:
             self.get_alive_members()
             self.init_fight()
@@ -140,7 +140,7 @@ class Simulation:
             if self.team_two.victories_count == 2:
                 self.winner = 2
                 self.has_a_winner = True
-        self.mail_body += round_winner_text
+        self.mail_body += '<p>' + round_winner_text + '</p>'
         if not self.has_a_winner:
             ## En caso de que no haya un ganador se reincia el HP de los personajes
             self.setup_next_round()
@@ -160,10 +160,22 @@ class Simulation:
         em_instance['From'] = sender
         em_instance['To'] = receiver
         em_instance['Subject'] = subject
-        em_instance.set_content(self.mail_body)
-        em_instance.add_attachment(self.winner_text, subtype='html')
+        body = self.set_html_body()
+        em_instance.set_content(body, subtype='html')
+        # em_instance.add_attachment(self.winner_text, subtype='html')
         context = ssl.create_default_context()
         with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
             smtp.login(sender, password)
             smtp.sendmail(sender, receiver, em_instance.as_string())
             print('Correo enviado exitosamente')
+    
+    def set_html_body(self):
+        html_text = f"""\
+            <html>
+                <head></head>
+                <body> 
+                    {self.mail_body}
+                </body>
+            </html>
+            """
+        return html_text

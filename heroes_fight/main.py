@@ -16,5 +16,5 @@ while not simulation.has_a_winner:
 
 final_winner_text = f'\n¡El vencedor de la batalla es el equipo {simulation.winner}!'
 print(final_winner_text + '\n')
-simulation.winner_text += '<b>' + final_winner_text + '</b>'
+simulation.mail_body += '<p><b>' + final_winner_text + '</b></p>'
 simulation.check_if_send_results()
