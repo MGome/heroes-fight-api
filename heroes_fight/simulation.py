@@ -73,13 +73,13 @@ class Simulation:
         self.mail_body += encounter_text + '<br>'
         print(encounter_text)
         if team_one_fighter.base_stats['speed'] > team_two_fighter.base_stats['speed']:
-            ## Ataca primero el luchador 1
+            # Ataca primero el luchador 1
             self.attack_simulation(team_one_fighter, team_two_fighter)
         elif team_two_fighter.base_stats['speed'] > team_one_fighter.base_stats['speed']:
-            ## Ataca primero el luchador 2
+            # Ataca primero el luchador 2
             self.attack_simulation(team_two_fighter, team_one_fighter)
         else:
-            ## Caso en que ambos tienen la misma velocidad, se define aleatoriamente
+            # Caso en que ambos tienen la misma velocidad, se define aleatoriamente
             fighters = [team_one_fighter, team_two_fighter]
             first_to_attack = random.choice(fighters)
             fighters.remove(first_to_attack)
@@ -190,16 +190,18 @@ class Simulation:
                 self.has_a_winner = True
         self.mail_body += round_winner_text + '<br>'
         if not self.has_a_winner:
-            ## En caso de que no haya un ganador se reincia el HP de los personajes
+            # En caso de que no haya un ganador se reincia el HP de los personajes
             self.setup_next_round()
-    
+
     def check_if_send_results(self):
         '''
         Método que consulta al usuario si es que desea
         enviar los resultados por mail.
         '''
         should_send = int(input('¿Deseas enviar los resultados por email? (0: No, 1: Sí)\n'))
-        if should_send > 0:
+        while should_send > 1 or should_send < 0:
+            should_send = int(input('¿Deseas enviar los resultados por email? (0: No, 1: Sí)\n'))
+        if should_send == 1:
             receiver = input('Ingresa la dirección a la que deseas enviar los resultados: ')
             self.send_email(receiver)
 
