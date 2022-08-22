@@ -17,16 +17,17 @@ pip install certifi
 ```
 
 ## Consideraciones generales del flujo
-El sistema de combates es de 5 vs 5, donde el formato de peleas es igual al que se presenta en juegos como Mortal Kombat además de algunas consideraciones adicionales, las cuales son:
+El sistema de combates es de 5 vs 5, donde las consideraciones más relevantes de este formato son:
 - Las batallas se juegan por rondas, donde gana el mejor de 3.
 - Los personajes se enfrentan 1 vs 1, donde el que pierde es eliminado del combate en la ronda actual.
 - Los enfrentamientos son decididos de forma aleatoria, donde la selección de cualquier personaje es equiprobable.
 - Los ataques son por turnos, donde el que ataca primero es el que tenga una estadística de velocidad mayor.
 - El personaje que gana el combate puede luchar inmediatamente en el siguiente turno con el mismo HP que terminó su combate.
 - Al finalizar una ronda todos los miembros de los equipos recuperan el estado de su HP inicial.
+- Una ronda finaliza cuando uno de los equipos no tiene personajes disponibles para luchar.
 
 ## Supuestos
-- Si bien un personaje puede ser héroe o villano, la clase que engloba ambos recibe el nombre Héroe.
+- Si bien un personaje puede ser héroe o villano, la clase que engloba ambos recibe el nombre `Hero`.
 - El HP y la potencia de los ataques son calculados una vez que ya se calcularon las estadísticas reales. En este caso cabe mencionar que cuando se realiza la simulación habiendo calculado el HP y la potencia de los ataques antes de calcular las estadísticas reales la simulación dura un poco más, ya que los ataques no son tan poderosos como en el caso descrito en el supuesto. Sin embargo, dado que se calculan las estadísticas reales, se consideró que hacía más sentido utilizar los nuevos valores para los cálculos (en otro caso jamás habrían sido utilizados en la simulación, sin contar la velocidad).
 - El FB se calcula con la función dada para cada uno de los personajes.
 

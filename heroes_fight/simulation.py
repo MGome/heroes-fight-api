@@ -90,8 +90,7 @@ class Simulation:
         Método que simula una pelea, recibe dos instancias de héroes
         que siguen la siguiente regla:
         First: Primero en atacar, Second: Segundo en atacar
-        Ambos se atacan hasta que uno de los dos tenga HP
-        menor o igual a 0.
+        Ambos se atacan hasta que uno de los dos tenga HP 0.
         '''
         battle_finished = False
         while not battle_finished:

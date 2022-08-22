@@ -16,7 +16,7 @@ class Hero:
 
     def select_attack(self):
         '''
-        Se selecciona aleatoriamente un ataque de un determinado héroe.
+        Se selecciona aleatoriamente un ataque de un determinado personaje.
         Se guarda como un diccionario el nombre del ataque y su potencia,
         con fin de mostrar el nombre del ataque en el log de eventos.
         '''
